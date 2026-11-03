@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Belajar Teks Prosedur - Kelas IX SMP/MTs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF', // Biru Utama
+                        secondary: '#3B82F6', // Biru Muda
+                        accent: '#F97316', // Oranye Enerjik
+                        accentHover: '#EA580C',
+                        surface: '#F8FAFC',
+                        darkText: '#0F172A',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Custom Styles & Animations */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F1F5F9;
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Smooth Transition */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3B82F6;
+            border-radius: 4px;
+        }
+
+        /* Drag & Drop Styling */
+        .draggable-item {
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+        .drag-over {
+            border-color: #F97316 !important;
+            background-color: #FFF7ED !important;
+        }
+
+        /* Custom Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Print Style Optimization */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+            .print-only {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-accent selection:text-white">
+
+    <!-- TOP HEADER / NAVIGATION (Tampil setelah login) -->
+    <header id="appHeader" class="hidden sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-200 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('menuUtama')">
+                <div class="bg-primary text-white p-2 rounded-lg font-heading font-bold text-xl flex items-center justify-center w-10 h-10 shadow">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-bold text-lg text-primary leading-tight">TEKS PROSEDUR</h1>
+                    <p class="text-xs text-slate-500 font-semibold">Kelas IX SMP/MTs • Fase D</p>
+                </div>
+            </div>
+
+            <!-- Student Profile Badge & Progress Bar -->
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:flex flex-col items-end">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-user-circle text-accent text-lg"></i>
+                        <span id="headerStudentName" class="font-semibold text-slate-700 text-sm">Siswa</span>
+                    </div>
+                    <!-- Overall Progress Bar -->
+                    <div class="w-32 bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                        <div id="overallProgressBar" class="bg-accent h-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+                <button onclick="navigateTo('menuUtama')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-house text-primary"></i> Menu Utama
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- ================================================================= -->
+        <!-- A. HALAMAN PEMBUKA -->
+        <!-- ================================================================= -->
+        <section id="halamanPembuka" class="page-section active flex items-center justify-center min-h-[85vh]">
+            <div class="max-w-4xl w-full glass-card rounded-3xl p-6 sm:p-10 shadow-2xl border border-slate-100 text-center relative overflow-hidden">
+                <!-- Decorative Elements -->
+                <div class="absolute -top-12 -right-12 w-40 h-40 bg-accent/10 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
+
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-primary font-bold text-xs uppercase tracking-wider rounded-full mb-4">
+                    <i class="fa-solid fa-rocket text-accent"></i> Media Pembelajaran Interaktif Bahasa Indonesia
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-primary mb-3 leading-tight">
+                    PETUALANGAN BELAJAR<br><span class="text-accent">TEKS PROSEDUR</span>
+                </h1>
+                <p class="text-slate-600 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
+                    Kuasai keterampilan membuat petunjuk, resep, dan panduan langkah demi langkah secara terstruktur, sistematis, dan menyenangkan!
+                </p>
+
+                <!-- Hero Illustration -->
+                <div class="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto mb-8 bg-gradient-to-tr from-blue-500 to-accent rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition duration-300">
+                    <i class="fa-solid fa-list-check text-white text-7xl sm:text-8xl"></i>
+                    <div class="absolute bottom-2 right-2 bg-white p-3 rounded-full shadow-md text-accent">
+                        <i class="fa-solid fa-lightbulb text-2xl"></i>
+                    </div>
+                </div>
+
+                <!-- Form Login Siswa -->
+                <div class="max-w-md mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
+                    <label for="studentNameInput" class="block text-left text-sm font-semibold text-slate-700 mb-2">
+                        <i class="fa-solid fa-user-pen text-accent mr-1"></i> Masukkan Nama Lengkapmu:
+                    </label>
+                    <input type="text" id="studentNameInput" placeholder="Contoh: Budi Santoso" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent mb-4 text-slate-800 font-medium">
+                    
+                    <button onclick="startLearning()" class="w-full py-3.5 bg-accent hover:bg-accentHover text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+                        <span>MULAI BELAJAR</span>
+                        <i class="fa-solid fa-circle-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- B. MENU UTAMA -->
+        <!-- ================================================================= -->
+        <section id="menuUtama" class="page-section">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-extrabold text-primary mb-2">PILIH MENU BELAJAR</h2>
+                <p class="text-slate-600">Pilih salah satu modul di bawah ini untuk memulai petualangan belajarmu!</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Menu Items -->
+                <div onclick="navigateTo('petunjuk')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-blue-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">1. Petunjuk Penggunaan</h3>
+                    <p class="text-sm text-slate-500">Panduan mudah mengoperasikan media pembelajaran ini.</p>
+                </div>
+
+                <div onclick="navigateTo('tujuan')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-indigo-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">2. Tujuan Pembelajaran</h3>
+                    <p class="text-sm text-slate-500">Capaian & kompetensi yang akan kamu kuasai.</p>
+                </div>
+
+                <div onclick="navigateTo('materi')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-accent hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-orange-100 text-accent rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-accent group-hover:text-white transition">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">3. Materi Pembelajaran</h3>
+                    <p class="text-sm text-slate-500">Pengertian, ciri, jenis, struktur, & kaidah bahasa.</p>
+                </div>
+
+                <div onclick="navigateTo('video')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-red-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-red-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-circle-play"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">4. Video Pembelajaran</h3>
+                    <p class="text-sm text-slate-500">Simak penjelasan materi menarik lewat sajian video.</p>
+                </div>
+
+                <div onclick="navigateTo('aktivitas')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-emerald-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-puzzle-piece"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">5. Aktivitas Interaktif</h3>
+                    <p class="text-sm text-slate-500">Latihan seru mencocokkan & menganalisis teks.</p>
+                </div>
+
+                <div onclick="navigateTo('kuis')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-purple-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-clipboard-question"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">6. Kuis Evaluasi</h3>
+                    <p class="text-sm text-slate-500">Uji pemahamanmu dengan 15 soal pilihan ganda.</p>
+                </div>
+
+                <div onclick="navigateTo('game')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-pink-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-pink-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">7. Game Edukasi</h3>
+                    <p class="text-sm text-slate-500">Mainkan game "Misi Susun Langkah" yang menantang.</p>
+                </div>
+
+                <div onclick="navigateTo('refleksi')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-amber-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">8. Refleksi Belajar</h3>
+                    <p class="text-sm text-slate-500">Tuliskan kesan dan pengalaman belajarmu.</p>
+                </div>
+
+                <div onclick="navigateTo('hasil')" class="glass-card p-6 rounded-2xl hover:shadow-xl transition-all cursor-pointer border-l-4 border-teal-500 hover:-translate-y-1 group">
+                    <div class="w-14 h-14 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-teal-600 group-hover:text-white transition">
+                        <i class="fa-solid fa-square-poll-vertical"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">9. Rekap Hasil Belajar</h3>
+                    <p class="text-sm text-slate-500">Lihat progress, skor evaluasi, & cetak nilai.</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="navigateTo('profil')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-sm transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-id-card"></i> Profil Pengembang Media
+                </button>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- C. PETUNJUK PENGGUNAAN -->
+        <!-- ================================================================= -->
+        <section id="petunjuk" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
+                    <div class="p-3 bg-blue-100 text-blue-600 rounded-xl text-2xl"><i class="fa-solid fa-compass"></i></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-primary">Petunjuk Penggunaan Aplikasi</h2>
+                        <p class="text-sm text-slate-500">Panduan langkah-langkah belajar menggunakan media interaktif ini</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="w-8 h-8 bg-accent text-white font-bold rounded-full flex items-center justify-center shrink-0">1</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">Mempelajari Materi</h4>
+                            <p class="text-sm text-slate-600">Buka menu <b>Materi Pembelajaran</b> dan <b>Video Pembelajaran</b>. Baca dan simak baik-baik konsep mengenai Teks Prosedur, struktur, serta kaidah kebahasaannya.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="w-8 h-8 bg-accent text-white font-bold rounded-full flex items-center justify-center shrink-0">2</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">Melakukan Aktivitas Interaktif</h4>
+                            <p class="text-sm text-slate-600">Selesaikan 3 modul pada <b>Aktivitas Interaktif</b>. Kamu bisa menyeret (drag) langkah-langkah teks atau menekan tombol pilihan untuk menguji pemahaman awal.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="w-8 h-8 bg-accent text-white font-bold rounded-full flex items-center justify-center shrink-0">3</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">Mengerjakan Kuis Evaluasi</h4>
+                            <p class="text-sm text-slate-600">Jawab 15 soal pilihan ganda di menu <b>Kuis Evaluasi</b>. Nilai akhirmu akan dihitung secara otomatis dalam skala 0–100.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="w-8 h-8 bg-accent text-white font-bold rounded-full flex items-center justify-center shrink-0">4</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">Bermain & Mengisi Refleksi</h4>
+                            <p class="text-sm text-slate-600">Uji ketangkasan di <b>Game Edukasi</b> dan tuliskan umpan balik pemahamanmu pada menu <b>Refleksi</b>.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="w-8 h-8 bg-accent text-white font-bold rounded-full flex items-center justify-center shrink-0">5</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">Melihat Rekap & Cetak Hasil</h4>
+                            <p class="text-sm text-slate-600">Buka menu <b>Hasil Belajar</b> untuk melihat pencapaian dan mengunduh/mencetak sertifikat ringkasan nilai belajar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="navigateTo('menuUtama')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Menu
+                    </button>
+                    <button onclick="navigateTo('tujuan')" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white font-semibold rounded-xl shadow transition">
+                        Lanjut ke Tujuan Pembelajaran <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- D. TUJUAN PEMBELAJARAN -->
+        <!-- ================================================================= -->
+        <section id="tujuan" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
+                    <div class="p-3 bg-indigo-100 text-indigo-600 rounded-xl text-2xl"><i class="fa-solid fa-bullseye"></i></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-primary">Tujuan Pembelajaran (Fase D)</h2>
+                        <p class="text-sm text-slate-500">Capaian Pembelajaran Bahasa Indonesia Kelas IX SMP/MTs</p>
+                    </div>
+                </div>
+
+                <p class="text-slate-700 mb-6 font-medium">Setelah menyelesaikan pembelajaran pada media interaktif ini, peserta didik diharapkan mampu:</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-blue-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800">1. Memahami Konsep Teks</h4>
+                            <p class="text-sm text-slate-600">Memahami pengertian dan tujuan komunikatif dari teks prosedur.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-blue-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800">2. Mengidentifikasi Struktur</h4>
+                            <p class="text-sm text-slate-600">Menganalisis dan menentukan bagian-bagian struktur teks prosedur secara tepat.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-blue-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800">3. Kaidah Kebahasaan</h4>
+                            <p class="text-sm text-slate-600">Mengidentifikasi kata kerja imperatif, konjungsi temporal, dan kalimat larangan/saran.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-blue-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800">4. Menganalisis Urutan</h4>
+                            <p class="text-sm text-slate-600">Mampu menyusun urutan langkah-langkah petunjuk secara logis dan runtut.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-blue-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800">5. Menulis Teks Prosedur</h4>
+                            <p class="text-sm text-slate-600">Menyusun teks prosedur karya sendiri dengan pilihan kata yang efektif dan sistematis.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-blue-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800">6. Mempresentasikan Karya</h4>
+                            <p class="text-sm text-slate-600">Mampu mengomunikasikan langkah-langkah prosedur secara lisan secara lincah dan percaya diri.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <button onclick="navigateTo('petunjuk')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Petunjuk
+                    </button>
+                    <button onclick="navigateTo('materi')" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white font-semibold rounded-xl shadow transition">
+                        Lanjut ke Materi <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- E. MATERI PEMBELAJARAN -->
+        <!-- ================================================================= -->
+        <section id="materi" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-5xl mx-auto">
+                <!-- Header Section -->
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-orange-100 text-accent rounded-xl text-2xl"><i class="fa-solid fa-book-open-reader"></i></div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-primary">Materi Pembelajaran Teks Prosedur</h2>
+                            <p class="text-sm text-slate-500">Pelajari konsep dasar hingga menyusun teks prosedur</p>
+                        </div>
+                    </div>
+                    <span id="materiTabIndicator" class="px-3 py-1 bg-accent/10 text-accent text-xs font-bold rounded-full">Halaman 1 dari 5</span>
+                </div>
+
+                <!-- Tab Buttons -->
+                <div class="flex overflow-x-auto gap-2 pb-3 mb-6 no-scrollbar">
+                    <button onclick="showMateriTab(1)" id="materiTabBtn1" class="materi-tab-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap bg-primary text-white">1. Pengertian & Tujuan</button>
+                    <button onclick="showMateriTab(2)" id="materiTabBtn2" class="materi-tab-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200">2. Ciri & Jenis</button>
+                    <button onclick="showMateriTab(3)" id="materiTabBtn3" class="materi-tab-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200">3. Struktur Teks</button>
+                    <button onclick="showMateriTab(4)" id="materiTabBtn4" class="materi-tab-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200">4. Kaidah Kebahasaan</button>
+                    <button onclick="showMateriTab(5)" id="materiTabBtn5" class="materi-tab-btn px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap bg-slate-100 text-slate-600 hover:bg-slate-200">5. Contoh Lengkap</button>
+                </div>
+
+                <!-- Tab Content 1: Pengertian & Tujuan -->
+                <div id="materiContent1" class="materi-content space-y-6">
+                    <div class="bg-blue-50 border-l-4 border-primary p-5 rounded-r-2xl">
+                        <h3 class="text-xl font-bold text-primary mb-2"><i class="fa-solid fa-quote-left mr-2"></i>Apa itu Teks Prosedur?</h3>
+                        <p class="text-slate-700 leading-relaxed">
+                            <b>Teks Prosedur</b> adalah jenis teks yang berisi urutan petunjuk atau langkah-langkah yang harus dilakukan untuk mencapai suatu tujuan secara benar, tepat, dan sistematis.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                            <h4 class="font-bold text-slate-800 text-lg mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-bullseye text-accent"></i> Tujuan Utama
+                            </h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Memberikan petunjuk atau panduan logis kepada pembaca atau pendengar agar mereka dapat melakukan, membuat, atau menggunakan sesuatu dengan urutan yang tepat dan memperoleh hasil akhir yang maksimal.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                            <h4 class="font-bold text-slate-800 text-lg mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-lightbulb text-amber-500"></i> Manfaat Nyata
+                            </h4>
+                            <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                                <li>Mencegah kesalahan dalam melakukan suatu pekerjaan.</li>
+                                <li>Mempermudah seseorang melakukan hal baru.</li>
+                                <li>Menghemat waktu dan tenaga karena panduan sudah runtut.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content 2: Ciri-ciri & Jenis-jenis -->
+                <div id="materiContent2" class="materi-content hidden space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-primary mb-3">Ciri-Ciri Teks Prosedur</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                                <h5 class="font-bold text-emerald-800 mb-1"><i class="fa-solid fa-check mr-2"></i>Berisi Langkah-Langkah</h5>
+                                <p class="text-xs text-slate-600">Urutan tindakan yang disusun bertahap dan sistematis.</p>
+                            </div>
+                            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                                <h5 class="font-bold text-emerald-800 mb-1"><i class="fa-solid fa-check mr-2"></i>Menggunakan Kalimat Imperatif</h5>
+                                <p class="text-xs text-slate-600">Menggunakan kalimat perintah yang jelas (misal: *Tuangkan!*, *Campurkan!*).</p>
+                            </div>
+                            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                                <h5 class="font-bold text-emerald-800 mb-1"><i class="fa-solid fa-check mr-2"></i>Bersifat Detail & Akurat</h5>
+                                <p class="text-xs text-slate-600">Menyebutkan ukuran, takaran, dan durasi secara jelas.</p>
+                            </div>
+                            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                                <h5 class="font-bold text-emerald-800 mb-1"><i class="fa-solid fa-check mr-2"></i>Menggunakan Kata Hubung Urutan</h5>
+                                <p class="text-xs text-slate-600">Menggunakan konjungsi temporal seperti *kemudian, setelah itu, lalu*.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-200">
+                        <h3 class="text-xl font-bold text-primary mb-3">Jenis-Jenis Teks Prosedur</h3>
+                        <div class="space-y-3">
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                                <span class="badge bg-blue-100 text-blue-700 mb-1">1. Teks Prosedur Sederhana</span>
+                                <p class="text-sm text-slate-600">Hanya terdiri atas dua atau tiga langkah saja. Contoh: *Cara mematikan televisi, cara mengoperasikan setrika.*</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                                <span class="badge bg-indigo-100 text-indigo-700 mb-1">2. Teks Prosedur Kompleks</span>
+                                <p class="text-sm text-slate-600">Terdiri atas banyak langkah yang berjenjang dan memerlukan ketelitian tinggi. Contoh: *Cara membuat paspor, cara mendaftar sekolah online.*</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                                <span class="badge bg-purple-100 text-purple-700 mb-1">3. Teks Prosedur Protokol</span>
+                                <p class="text-sm text-slate-600">Langkah-langkahnya tidak harus ketat berurutan dan fleksibel tetapi tujuan akhir tetap tercapai. Contoh: *Cara memasak mi instan.*</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content 3: Struktur Teks -->
+                <div id="materiContent3" class="materi-content hidden space-y-4">
+                    <h3 class="text-xl font-bold text-primary mb-2">Struktur Umum Teks Prosedur</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-purple-50 border-l-4 border-purple-500 rounded-r-xl">
+                            <h4 class="font-bold text-purple-900 text-base">1. Judul</h4>
+                            <p class="text-xs text-slate-600">Nama kegiatan atau produk yang akan dibuat/dilakukan.</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl">
+                            <h4 class="font-bold text-blue-900 text-base">2. Tujuan</h4>
+                            <p class="text-xs text-slate-600">Penjelasan singkat mengenai hasil akhir yang ingin dicapai dari aktivitas prosedur tersebut.</p>
+                        </div>
+                        <div class="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-xl">
+                            <h4 class="font-bold text-amber-900 text-base">3. Alat dan Bahan (Opsional)</h4>
+                            <p class="text-xs text-slate-600">Rincian alat, perlengkapan, serta bahan-bahan dengan ukuran yang akurat (biasanya untuk prosedur membuat sesuatu).</p>
+                        </div>
+                        <div class="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-xl">
+                            <h4 class="font-bold text-emerald-900 text-base">4. Langkah-Langkah (Inti)</h4>
+                            <p class="text-xs text-slate-600">Urutan tindakan atau instruksi pelaksanaan dari awal sampai akhir secara bertahap.</p>
+                        </div>
+                        <div class="p-4 bg-rose-50 border-l-4 border-rose-500 rounded-r-xl">
+                            <h4 class="font-bold text-rose-900 text-base">5. Penutup / Simpulan (Opsional)</h4>
+                            <p class="text-xs text-slate-600">Kalimat ucapan selamat mencoba atau apresiasi atas selesainya prosedur.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content 4: Kaidah Kebahasaan -->
+                <div id="materiContent4" class="materi-content hidden space-y-4">
+                    <h3 class="text-xl font-bold text-primary mb-2">Kaidah Kebahasaan Teks Prosedur</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="font-bold text-primary text-sm flex items-center gap-2 mb-2"><i class="fa-solid fa-terminal"></i> Kalimat Imperatif (Perintah)</span>
+                            <p class="text-xs text-slate-600 mb-2">Mengandung intonasi perintah atau ajakan.</p>
+                            <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded">Contoh: *Aduk hingga merata!*, *Matikan daya listrik!*</span>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="font-bold text-primary text-sm flex items-center gap-2 mb-2"><i class="fa-solid fa-person-running"></i> Kata Kerja Tindakan (Verba Material)</span>
+                            <p class="text-xs text-slate-600 mb-2">Kata kerja yang menunjukkan aksi fisik.</p>
+                            <span class="text-xs font-semibold bg-green-100 text-green-800 px-2 py-1 rounded">Contoh: *Memotong*, *Mengocok*, *Mengetik*</span>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="font-bold text-primary text-sm flex items-center gap-2 mb-2"><i class="fa-solid fa-link"></i> Konjungsi Temporal</span>
+                            <p class="text-xs text-slate-600 mb-2">Kata penghubung yang menyatakan urutan waktu.</p>
+                            <span class="text-xs font-semibold bg-amber-100 text-amber-800 px-2 py-1 rounded">Contoh: *Selanjutnya*, *Setelah itu*, *Kemudian*</span>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="font-bold text-primary text-sm flex items-center gap-2 mb-2"><i class="fa-solid fa-clock"></i> Kata Keterangan (Adverbia)</span>
+                            <p class="text-xs text-slate-600 mb-2">Memberikan rincian cara, waktu, atau tempat.</p>
+                            <span class="text-xs font-semibold bg-purple-100 text-purple-800 px-2 py-1 rounded">Contoh: *Goreng selama 5 menit*, *Secara perlahan*</span>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl md:col-span-2">
+                            <span class="font-bold text-primary text-sm flex items-center gap-2 mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Kalimat Persuasif, Saran, & Larangan</span>
+                            <p class="text-xs text-slate-600 mb-2">Memberikan himbauan agar hasil maksimal dan aman.</p>
+                            <span class="text-xs font-semibold bg-red-100 text-red-800 px-2 py-1 rounded">Contoh: *Sebaiknya gunakan air hangat.* / *Jangan memasukkan telur saat minyak terlalu panas.*</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content 5: Contoh Teks Prosedur -->
+                <div id="materiContent5" class="materi-content hidden space-y-4">
+                    <h3 class="text-xl font-bold text-primary mb-2">Contoh Teks Prosedur Lengkap</h3>
+                    
+                    <div class="p-6 bg-slate-50 border border-slate-300 rounded-2xl space-y-4 font-sans">
+                        <div class="text-center border-b pb-3 border-slate-300">
+                            <span class="text-xs font-bold text-purple-600 uppercase tracking-widest">[ Structure: JUDUL ]</span>
+                            <h4 class="text-xl font-extrabold text-slate-800">Cara Membuat Teh Manis Hangat yang Nikmat</h4>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">[ Structure: TUJUAN ]</span>
+                            <p class="text-sm text-slate-700">Teh manis hangat adalah minuman sederhana yang sangat cocok dinikmati saat pagi hari atau ketika cuaca dingin. Berikut panduan praktis membuatnya secara nikmat.</p>
+                        </div>
+
+                        <div class="bg-amber-50 p-3 rounded-xl border border-amber-200">
+                            <span class="text-xs font-bold text-amber-700 uppercase tracking-widest">[ Structure: ALAT DAN BAHAN ]</span>
+                            <ul class="text-xs text-slate-700 list-disc list-inside mt-1 grid grid-cols-2 gap-1">
+                                <li>1 kantong teh celup</li>
+                                <li>2 sendok makan gula pasir</li>
+                                <li>200 ml air panas</li>
+                                <li>Cangkir & sendok teh</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">[ Structure: LANGKAH-LANGKAH ]</span>
+                            <ol class="text-xs text-slate-700 list-decimal list-inside space-y-1.5 mt-1">
+                                <li>Masukkan 1 kantong teh celup ke dalam cangkir bersih.</li>
+                                <li>Tuangkan air panas ke dalam cangkir hingga hampir penuh.</li>
+                                <li>Celup-celupkan teh hingga warna air berubah menjadi cokelat kemerahan.</li>
+                                <li>Tambahkan 2 sendok makan gula pasir.</li>
+                                <li>Aduk teh manis secara perlahan hingga gula larut sempurna.</li>
+                            </ol>
+                        </div>
+
+                        <div class="bg-rose-50 p-3 rounded-xl border border-rose-200">
+                            <span class="text-xs font-bold text-rose-700 uppercase tracking-widest">[ Structure: PENUTUP ]</span>
+                            <p class="text-xs text-slate-700">Teh manis hangat siap dihidangkan dan dinikmati bersama biskuit kesukaanmu!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons inside Materi -->
+                <div class="mt-8 flex justify-between items-center border-t border-slate-200 pt-4">
+                    <button id="prevMateriBtn" onclick="prevMateriTab()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-semibold text-sm transition opacity-50 cursor-not-allowed" disabled>
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Sebelumnya
+                    </button>
+
+                    <button id="nextMateriBtn" onclick="nextMateriTab()" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white rounded-xl font-semibold text-sm shadow transition">
+                        Selanjutnya <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- F. VIDEO PEMBELAJARAN -->
+        <!-- ================================================================= -->
+        <section id="video" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-4xl mx-auto">
+                <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
+                    <div class="p-3 bg-red-100 text-red-600 rounded-xl text-2xl"><i class="fa-solid fa-circle-play"></i></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-primary">Video Pembelajaran Teks Prosedur</h2>
+                        <p class="text-sm text-slate-500">Tonton video edukasi interaktif untuk memperjelas pemahaman</p>
+                    </div>
+                </div>
+
+                <!-- Video Frame -->
+                <div class="relative w-full aspect-video bg-slate-900 rounded-2xl overflow-hidden shadow-xl mb-6">
+                    <iframe id="youtubeIframe" class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video Pembelajaran Teks Prosedur" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+
+                <!-- Teacher Custom Link Option -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+                    <label for="youtubeUrlInput" class="block text-xs font-bold text-slate-700 mb-1">
+                        <i class="fa-solid fa-gear text-accent"></i> Fitur Guru: Ganti Tautan Video YouTube
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="text" id="youtubeUrlInput" placeholder="Tempel tautan YouTube di sini (contoh: https://www.youtube.com/watch?v=...)" class="flex-grow text-xs px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-primary">
+                        <button onclick="updateYoutubeVideo()" class="px-4 py-2 bg-primary hover:bg-blue-900 text-white font-bold text-xs rounded-lg transition">Update Video</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <button onclick="navigateTo('materi')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Materi
+                    </button>
+                    <button onclick="navigateTo('aktivitas')" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white font-semibold rounded-xl shadow transition">
+                        Lanjut ke Aktivitas <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- G. AKTIVITAS INTERAKTIF -->
+        <!-- ================================================================= -->
+        <section id="aktivitas" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-4xl mx-auto">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl text-2xl"><i class="fa-solid fa-puzzle-piece"></i></div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-primary">Aktivitas Interaktif</h2>
+                            <p class="text-sm text-slate-500">Uji langsung pemahamanmu melalui tantangan interaktif!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs Navigation for Activities -->
+                <div class="flex border-b border-slate-200 mb-6 gap-4">
+                    <button onclick="showActivity(1)" id="actTab1" class="pb-3 border-b-2 border-primary font-bold text-primary text-sm">Aktivitas 1: Struktur</button>
+                    <button onclick="showActivity(2)" id="actTab2" class="pb-3 border-b-2 border-transparent font-bold text-slate-500 hover:text-slate-700 text-sm">Aktivitas 2: Susun Langkah</button>
+                    <button onclick="showActivity(3)" id="actTab3" class="pb-3 border-b-2 border-transparent font-bold text-slate-500 hover:text-slate-700 text-sm">Aktivitas 3: Kebahasaan</button>
+                </div>
+
+                <!-- Activity 1: Matching Structures -->
+                <div id="activityContent1" class="space-y-6">
+                    <p class="text-sm text-slate-600"><b>Petunjuk:</b> Tentukan bagian struktur teks yang paling sesuai untuk kutipan berikut!</p>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <p class="italic text-sm text-slate-700 mb-3">"Siapkan 1 sachet kopi bubuk, 2 sendok teh gula pasir, dan 150 ml air mendidih."</p>
+                            <div class="flex flex-wrap gap-2" id="act1_q1">
+                                <button onclick="checkAct1(1, 'Tujuan', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:border-primary">Tujuan</button>
+                                <button onclick="checkAct1(1, 'Alat dan Bahan', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:border-primary">Alat & Bahan</button>
+                                <button onclick="checkAct1(1, 'Langkah-langkah', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:border-primary">Langkah-langkah</button>
+                            </div>
+                            <div id="act1_fb1" class="hidden mt-2 text-xs font-bold"></div>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <p class="italic text-sm text-slate-700 mb-3">"Aduk adonan tersebut hingga kalis dan diamkan selama 15 menit agar mengembang."</p>
+                            <div class="flex flex-wrap gap-2" id="act1_q2">
+                                <button onclick="checkAct1(2, 'Tujuan', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:border-primary">Tujuan</button>
+                                <button onclick="checkAct1(2, 'Alat dan Bahan', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:border-primary">Alat & Bahan</button>
+                                <button onclick="checkAct1(2, 'Langkah-langkah', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold hover:border-primary">Langkah-langkah</button>
+                            </div>
+                            <div id="act1_fb2" class="hidden mt-2 text-xs font-bold"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity 2: Reordering Steps (Drag/Move Up/Down) -->
+                <div id="activityContent2" class="hidden space-y-6">
+                    <p class="text-sm text-slate-600"><b>Petunjuk:</b> Urutkan langkah-langkah membuat *Jus Alpukat* berikut dengan menggunakan tombol panah Naik/Turun agar berurutan dengan benar!</p>
+                    
+                    <ul id="reorderList" class="space-y-2">
+                        <li data-id="3" class="p-3 bg-white border border-slate-300 rounded-xl flex items-center justify-between shadow-sm">
+                            <span class="text-xs sm:text-sm font-medium text-slate-700">A. Blender alpukat, es batu, dan susu cair hingga halus.</span>
+                            <div class="flex gap-1">
+                                <button onclick="moveStep(this, 'up')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button onclick="moveStep(this, 'down')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-down"></i></button>
+                            </div>
+                        </li>
+                        <li data-id="1" class="p-3 bg-white border border-slate-300 rounded-xl flex items-center justify-between shadow-sm">
+                            <span class="text-xs sm:text-sm font-medium text-slate-700">B. Belah buah alpukat matang dan kerok daging buahnya.</span>
+                            <div class="flex gap-1">
+                                <button onclick="moveStep(this, 'up')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button onclick="moveStep(this, 'down')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-down"></i></button>
+                            </div>
+                        </li>
+                        <li data-id="4" class="p-3 bg-white border border-slate-300 rounded-xl flex items-center justify-between shadow-sm">
+                            <span class="text-xs sm:text-sm font-medium text-slate-700">C. Tuangkan jus alpukat ke dalam gelas dan siap disajikan.</span>
+                            <div class="flex gap-1">
+                                <button onclick="moveStep(this, 'up')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button onclick="moveStep(this, 'down')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-down"></i></button>
+                            </div>
+                        </li>
+                        <li data-id="2" class="p-3 bg-white border border-slate-300 rounded-xl flex items-center justify-between shadow-sm">
+                            <span class="text-xs sm:text-sm font-medium text-slate-700">D. Masukkan daging alpukat ke dalam wadah blender.</span>
+                            <div class="flex gap-1">
+                                <button onclick="moveStep(this, 'up')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-up"></i></button>
+                                <button onclick="moveStep(this, 'down')" class="px-2 py-1 bg-slate-100 rounded hover:bg-slate-200 text-xs"><i class="fa-solid fa-arrow-down"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <button onclick="checkReorderActivity()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition">Periksa Urutan</button>
+                    <div id="reorderFeedback" class="hidden text-sm font-bold"></div>
+                </div>
+
+                <!-- Activity 3: Language Rules -->
+                <div id="activityContent3" class="hidden space-y-6">
+                    <p class="text-sm text-slate-600"><b>Petunjuk:</b> Klasifikasikan jenis kata/kalimat yang dicetak tebal berikut ini!</p>
+
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <p class="text-sm text-slate-700 mb-2">"<b>Setelah itu</b>, masukkan bumbu halus ke dalam wajan."</p>
+                            <div class="flex gap-2">
+                                <button onclick="checkAct3(1, 'Konjungsi Temporal', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold">Konjungsi Temporal</button>
+                                <button onclick="checkAct3(1, 'Kata Kerja Imperatif', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold">Kata Kerja Imperatif</button>
+                            </div>
+                            <div id="act3_fb1" class="hidden mt-2 text-xs font-bold"></div>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <p class="text-sm text-slate-700 mb-2">"<b>Guntinglah</b> bagian ujung kemasan dengan hati-hati!"</p>
+                            <div class="flex gap-2">
+                                <button onclick="checkAct3(2, 'Konjungsi Temporal', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold">Konjungsi Temporal</button>
+                                <button onclick="checkAct3(2, 'Kata Kerja Imperatif', this)" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold">Kata Kerja Imperatif</button>
+                            </div>
+                            <div id="act3_fb2" class="hidden mt-2 text-xs font-bold"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="navigateTo('video')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Video
+                    </button>
+                    <button onclick="navigateTo('kuis')" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white font-semibold rounded-xl shadow transition">
+                        Lanjut ke Kuis Evaluasi <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- H. KUIS EVALUASI (15 Soal Pilihan Ganda) -->
+        <!-- ================================================================= -->
+        <section id="kuis" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-3xl mx-auto">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-purple-100 text-purple-600 rounded-xl text-2xl"><i class="fa-solid fa-clipboard-question"></i></div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-primary">Kuis Evaluasi</h2>
+                            <p class="text-sm text-slate-500">Uji pengetahuan akhirmu dengan 15 soal pilihan ganda</p>
+                        </div>
+                    </div>
+                    <span id="quizProgress" class="text-xs font-bold px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full">Soal 1/15</span>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quizContainer">
+                    <!-- Question Text -->
+                    <h3 id="quizQuestionText" class="text-lg font-bold text-slate-800 mb-6">Pertanyaan...</h3>
+
+                    <!-- Choices Options -->
+                    <div id="quizOptionsContainer" class="space-y-3 mb-6">
+                        <!-- Options injected dynamically -->
+                    </div>
+
+                    <!-- Discussion / Explanation Box -->
+                    <div id="quizDiscussionBox" class="hidden p-4 rounded-xl border mb-6 text-xs leading-relaxed"></div>
+
+                    <!-- Quiz Navigation Buttons -->
+                    <div class="flex justify-between items-center">
+                        <button id="nextQuizBtn" onclick="nextQuizQuestion()" class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm rounded-xl shadow transition ml-auto">
+                            Soal Berikutnya <i class="fa-solid fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Result Screen (Initial Hidden) -->
+                <div id="quizResultScreen" class="hidden text-center py-6">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-purple-500 to-indigo-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-1">Evaluasi Selesai!</h3>
+                    <p class="text-sm text-slate-500 mb-6">Berikut adalah perolehan skor akhirmu:</p>
+
+                    <div class="inline-block bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6 max-w-sm w-full">
+                        <div class="text-5xl font-black text-primary mb-2" id="quizScoreDisplay">0</div>
+                        <div id="quizGradeBadge" class="inline-block px-4 py-1.5 rounded-full text-xs font-bold text-white mb-2">Kategori</div>
+                        <p id="quizFeedbackMessage" class="text-xs text-slate-600">Pesan umpan balik.</p>
+                    </div>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="restartQuiz()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition text-sm">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Ulangi Kuis
+                        </button>
+                        <button onclick="navigateTo('game')" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white font-semibold rounded-xl shadow transition text-sm">
+                            Mainkan Game <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- I. GAME EDUKASI: MISI SUSUN LANGKAH -->
+        <!-- ================================================================= -->
+        <section id="game" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-3xl mx-auto text-center">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-pink-100 text-pink-600 rounded-xl text-2xl"><i class="fa-solid fa-gamepad"></i></div>
+                        <div class="text-left">
+                            <h2 class="text-2xl font-bold text-primary">Game Edukasi: MISI SUSUN LANGKAH</h2>
+                            <p class="text-sm text-slate-500">Susun urutan petunjuk secepat & setepat mungkin!</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold text-slate-400 block">SKOR GAME</span>
+                        <span id="gameScore" class="text-xl font-black text-pink-600">0</span>
+                    </div>
+                </div>
+
+                <div id="gameStartArea" class="py-8">
+                    <div class="w-20 h-20 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                        <i class="fa-solid fa-puzzle-piece"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Tantangan Koki Cilik!</h3>
+                    <p class="text-sm text-slate-600 max-w-md mx-auto mb-6">Urutkan langkah-langkah membuat <b>Mie Goreng Spesial</b> secara tepat sebelum waktu habis!</p>
+                    <button onclick="startGame()" class="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-bold text-base rounded-xl shadow-lg transition transform hover:scale-105">
+                        <i class="fa-solid fa-play mr-2"></i> MULAI GAME
+                    </button>
+                </div>
+
+                <div id="gamePlayArea" class="hidden text-left space-y-4">
+                    <div class="flex justify-between items-center bg-pink-50 p-3 rounded-xl border border-pink-200 mb-4">
+                        <span class="text-xs font-bold text-pink-800">Geser atau Gunakan Tombol untuk Mengurutkan:</span>
+                        <span id="gameTimer" class="text-xs font-extrabold text-pink-600 bg-white px-3 py-1 rounded-full border border-pink-200">Sisa Waktu: 45d</span>
+                    </div>
+
+                    <ul id="gameSortableList" class="space-y-2">
+                        <!-- Dynamic Game Steps -->
+                    </ul>
+
+                    <button onclick="checkGameAnswer()" class="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm rounded-xl shadow transition mt-4">
+                        <i class="fa-solid fa-check-circle mr-1"></i> KIRIM JAWABAN
+                    </button>
+                </div>
+
+                <div id="gameFinishArea" class="hidden py-6">
+                    <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-1">MISI SELESAI!</h3>
+                    <p id="gameMotivationalMsg" class="text-sm text-slate-600 mb-6">Hebat sekali! Kamu berhasil menyusun urutan prosedur dengan sangat tepat!</p>
+
+                    <div class="flex justify-center gap-4">
+                        <button onclick="startGame()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-sm transition">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Main Lagi
+                        </button>
+                        <button onclick="navigateTo('refleksi')" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white font-semibold rounded-xl shadow transition text-sm">
+                            Lanjut ke Refleksi <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- J. REFLEKSI PEMBELAJARAN -->
+        <!-- ================================================================= -->
+        <section id="refleksi" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-3xl mx-auto">
+                <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
+                    <div class="p-3 bg-amber-100 text-amber-600 rounded-xl text-2xl"><i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-primary">Refleksi Pembelajaran</h2>
+                        <p class="text-sm text-slate-500">Tuliskan pemikiran dan pengalamanku selama belajar hari ini</p>
+                    </div>
+                </div>
+
+                <form id="refleksiForm" onsubmit="saveReflection(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">1. Pengetahuan baru apa yang kamu dapatkan hari ini?</label>
+                        <textarea id="refQ1" rows="2" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Tuliskan di sini..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">2. Bagian materi apa yang paling mudah kamu pahami?</label>
+                        <textarea id="refQ2" rows="2" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Tuliskan di sini..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">3. Bagian materi apa yang masih terasa sulit bagimu?</label>
+                        <textarea id="refQ3" rows="2" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Tuliskan di sini..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">4. Apa manfaat teks prosedur yang bisa kamu gunakan dalam kehidupan sehari-hari?</label>
+                        <textarea id="refQ4" rows="2" class="w-full text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Tuliskan di sini..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm rounded-xl shadow transition">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Jawaban Refleksi
+                    </button>
+                </form>
+
+                <div id="reflectionSavedNotice" class="hidden mt-4 p-3 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold text-center">
+                    <i class="fa-solid fa-circle-check mr-1"></i> Refleksi berhasil disimpan!
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="navigateTo('game')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition text-sm">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Game
+                    </button>
+                    <button onclick="navigateTo('hasil')" class="px-5 py-2.5 bg-accent hover:bg-accentHover text-white font-semibold rounded-xl shadow transition text-sm">
+                        Lihat Rekap Hasil <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- K. HASIL BELAJAR / REKAP NILAI -->
+        <!-- ================================================================= -->
+        <section id="hasil" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-4xl mx-auto">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 bg-teal-100 text-teal-600 rounded-xl text-2xl"><i class="fa-solid fa-square-poll-vertical"></i></div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-primary">Laporan Hasil Belajar</h2>
+                            <p class="text-sm text-slate-500">Ringkasan capaian dan progress pembelajaran siswa</p>
+                        </div>
+                    </div>
+                    <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl shadow no-print flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                    </button>
+                </div>
+
+                <!-- Print Header Info -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-xs text-slate-400 block font-semibold">NAMA PESERTA DIDIK</span>
+                        <span id="rekapStudentName" class="text-lg font-bold text-slate-800">Budi Santoso</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-400 block font-semibold">MATA PELAJARAN / FASE</span>
+                        <span class="text-sm font-bold text-slate-800">Bahasa Indonesia / Fase D (Kelas IX)</span>
+                    </div>
+                </div>
+
+                <!-- Progress & Score Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-center">
+                        <span class="text-xs font-bold text-blue-700 uppercase">Progres Kelengkapan</span>
+                        <div id="rekapProgressPercentage" class="text-3xl font-black text-blue-900 my-1">0%</div>
+                        <span class="text-[10px] text-slate-500">Modul Pembelajaran Ditelusuri</span>
+                    </div>
+
+                    <div class="p-4 bg-purple-50 border border-purple-200 rounded-2xl text-center">
+                        <span class="text-xs font-bold text-purple-700 uppercase">Nilai Kuis Evaluasi</span>
+                        <div id="rekapQuizScore" class="text-3xl font-black text-purple-900 my-1">0</div>
+                        <span id="rekapQuizGrade" class="badge bg-purple-200 text-purple-800 text-[10px]">Belum Mengerjakan</span>
+                    </div>
+
+                    <div class="p-4 bg-pink-50 border border-pink-200 rounded-2xl text-center">
+                        <span class="text-xs font-bold text-pink-700 uppercase">Skor Game Edukasi</span>
+                        <div id="rekapGameScore" class="text-3xl font-black text-pink-900 my-1">0</div>
+                        <span class="text-[10px] text-slate-500">Poin Misi Susun Langkah</span>
+                    </div>
+                </div>
+
+                <!-- Reflection Summary -->
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 mb-6">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3 border-b border-slate-200 pb-2">Catatan Refleksi Siswa:</h4>
+                    <div id="rekapReflectionSummary" class="text-xs text-slate-600 space-y-2">
+                        <p class="italic text-slate-400">Belum ada tanggapan refleksi yang disimpan.</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between no-print">
+                    <button onclick="navigateTo('menuUtama')" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-sm transition">
+                        <i class="fa-solid fa-house mr-1"></i> Kembali ke Menu Utama
+                    </button>
+                    <button onclick="resetDataProgress()" class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-bold rounded-xl transition">
+                        <i class="fa-solid fa-trash-can mr-1"></i> Reset Progres Belajar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- PROFIL PENGEMBANG -->
+        <!-- ================================================================= -->
+        <section id="profil" class="page-section">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-2xl mx-auto text-center">
+                <div class="w-24 h-24 bg-gradient-to-tr from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 text-4xl text-white shadow-xl">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-primary mb-1">Pengembang Media Pembelajaran</h2>
+                <p class="text-xs font-bold text-accent uppercase tracking-widest mb-6">Tim Inovasi Bahasa Indonesia Kelas IX</p>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-left space-y-3 text-sm">
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-slate-500">Mata Pelajaran:</span>
+                        <span class="font-bold text-slate-800">Bahasa Indonesia</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-slate-500">Sasaran:</span>
+                        <span class="font-bold text-slate-800">Kelas IX SMP/MTs (Fase D)</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="text-slate-500">Materi Pokok:</span>
+                        <span class="font-bold text-slate-800">Teks Prosedur Kompleks & Sederhana</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Teknologi:</span>
+                        <span class="font-bold text-slate-800">HTML5, Tailwind CSS, JavaScript</span>
+                    </div>
+                </div>
+
+                <button onclick="navigateTo('menuUtama')" class="mt-6 px-6 py-2.5 bg-primary hover:bg-blue-900 text-white font-bold rounded-xl shadow text-sm transition">
+                    Kembali ke Menu Utama
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 no-print mt-8">
+        <p>© 2026 Media Pembelajaran Interaktif Bahasa Indonesia Kelas IX SMP/MTs • Fase D</p>
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- JAVASCRIPT APP LOGIC -->
+    <!-- ================================================================= -->
+    <script>
+        // State Application
+        let studentData = {
+            name: '',
+            quizScore: null,
+            gameScore: 0,
+            visitedPages: new Set(['halamanPembuka']),
+            reflections: {}
+        };
+
+        // Quiz Question Database (15 Question items)
+        const quizQuestions = [
+            {
+                q: "1. Teks yang berisi langkah-langkah atau petunjuk secara bertahap untuk mencapai tujuan tertentu disebut...",
+                options: ["Teks Eksplanasi", "Teks Prosedur", "Teks Narasi", "Teks Deskripsi"],
+                answer: 1,
+                discussion: "Pembahasan: Teks Prosedur dirancang khusus untuk memberikan petunjuk atau panduan langkah demi langkah dalam mencapai suatu tujuan."
+            },
+            {
+                q: "2. Salah satu ciri utama dari teks prosedur dalam penggunaan kalimatnya adalah...",
+                options: ["Menggunakan kalimat tanya", "Menggunakan kalimat imperatif (perintah)", "Menggunakan kalimat pengandaian", "Menggunakan kata kiasan"],
+                answer: 1,
+                discussion: "Pembahasan: Teks Prosedur dominan menggunakan kalimat imperatif untuk menginstruksikan pembaca melakukan suatu tindakan."
+            },
+            {
+                q: "3. Struktur awal dalam teks prosedur yang menjelaskan gambaran umum hasil yang ingin dicapai disebut...",
+                options: ["Langkah-langkah", "Alat dan Bahan", "Tujuan", "Penutup"],
+                answer: 2,
+                discussion: "Pembahasan: Bagian Tujuan memuat penjelasan singkat mengenai maksud dan hasil akhir dari prosedur yang akan dilakukan."
+            },
+            {
+                q: "4. Manakah di bawah ini yang merupakan contoh kata kerja imperatif?",
+                options: ["Dimasak", "Memasak", "Aduklah", "Pengaduk"],
+                answer: 2,
+                discussion: "Pembahasan: Kata 'Aduklah' mengandung akhiran -lah yang menjadikannya kata kerja imperatif (perintah)."
+            },
+            {
+                q: "5. Kata hubung yang menunjukkan urutan waktu seperti 'kemudian', 'setelah itu', dan 'lalu' disebut...",
+                options: ["Konjungsi Temporal", "Konjungsi Kausalitas", "Konjungsi Syarat", "Konjungsi Adversatif"],
+                answer: 0,
+                discussion: "Pembahasan: Konjungsi temporal adalah kata hubung yang menandai urutan waktu pelaksanaan langkah-langkah."
+            },
+            {
+                q: "6. 'Rebuslah air sampai mendidih!' Kalimat tersebut merupakan contoh kalimat...",
+                options: ["Deklaratif", "Imperatif", "Interogatif", "Persuasif"],
+                answer: 1,
+                discussion: "Pembahasan: Kalimat perintah yang menyuruh seseorang melakukan aksi disebut kalimat imperatif."
+            },
+            {
+                q: "7. Jenis teks prosedur yang hanya terdiri atas dua atau tiga langkah sederhana contohnya adalah...",
+                options: ["Cara membuat paspor", "Cara mematikan televisi", "Cara mengoperasikan komputer", "Cara mendirikan organisasi"],
+                answer: 1,
+                discussion: "Pembahasan: Mematikan televisi hanya butuh 2-3 langkah singkat sehingga tergolong teks prosedur sederhana."
+            },
+            {
+                q: "8. Bagian yang memuat alat, sarana, dan bahan yang diperlukan dengan ukuran akurat disebut...",
+                options: ["Tujuan", "Langkah-langkah", "Alat dan Bahan", "Simpulan"],
+                answer: 2,
+                discussion: "Pembahasan: Bagian Alat dan Bahan memperjelas rincian perlengkapan sebelum mempraktikkan langkah."
+            },
+            {
+                q: "9. Di bawah ini yang BUKAN merupakan fungsi teks prosedur dalam kehidupan sehari-hari adalah...",
+                options: ["Mempermudah melakukan pekerjaan baru", "Menghemat waktu dan energi", "Menghindari kesalahan petunjuk", "Menghibur pembaca dengan cerita fantasi"],
+                answer: 3,
+                discussion: "Pembahasan: Menghibur cerita fantasi adalah fungsi teks narasi/fiksi, bukan teks prosedur."
+            },
+            {
+                q: "10. 'Gorenglah adonan dengan api sedang agar tidak cepat gosong.' Kata 'dengan api sedang' berfungsi sebagai...",
+                options: ["Keterangan cara/alat", "Konjungsi temporal", "Kata kerja pasif", "Judul teks"],
+                answer: 0,
+                discussion: "Pembahasan: Frasa tersebut memberikan keterangan spesifik mengenai cara atau kondisi saat menggoreng."
+            },
+            {
+                q: "11. 'Tutup rapat wadah tersebut agar uap tidak keluar.' Kalimat ini memuat unsur saran/larangan yang bertujuan...",
+                options: ["Agar hasil pekerjaan menjadi sempurna dan aman", "Agar kalimat terlihat lebih panjang", "Untuk menghias struktur teks", "Untuk membingungkan pembaca"],
+                answer: 0,
+                discussion: "Pembahasan: Kalimat saran/larangan dalam teks prosedur ada untuk memastikan keamanan dan hasil terbaik."
+            },
+            {
+                q: "12. Teks prosedur kompleks berbeda dari teks prosedur sederhana karena...",
+                options: ["Langkahnya sangat singkat", "Langkahnya banyak dan berjenjang", "Tidak memiliki judul", "Tidak membutuhkan alat dan bahan"],
+                answer: 1,
+                discussion: "Pembahasan: Teks prosedur kompleks memiliki tingkat kerumitan lebih tinggi dengan sub-langkah bertingkat."
+            },
+            {
+                q: "13. Manakah yang merupakan judul teks prosedur yang tepat?",
+                options: ["Pengalamanku Liburan ke Pantai", "Mengapa Hujan Bisa Terjadi?", "Panduan Praktis Membuat Akun Email Baru", "Keindahan Pemandangan Gunung Bromo"],
+                answer: 2,
+                discussion: "Pembahasan: 'Panduan Praktis Membuat...' adalah ciri khas judul teks prosedur."
+            },
+            {
+                q: "14. Urutan struktur teks prosedur yang paling lengkap dan tepat adalah...",
+                options: ["Judul - Tujuan - Alat/Bahan - Langkah-langkah - Penutup", "Langkah-langkah - Judul - Tujuan", "Tujuan - Penutup - Langkah-langkah", "Alat/Bahan - Judul - Langkah-langkah"],
+                answer: 0,
+                discussion: "Pembahasan: Struktur runtut dimulai dari Judul, Tujuan, Alat & Bahan, Langkah-Langkah, hingga Penutup."
+            },
+            {
+                q: "15. 'Simpan obat di tempat yang sejuk dan hindarkan dari sinar matahari langsung.' Kalimat ini tergolong ke dalam...",
+                options: ["Kalimat Larangan/Saran", "Kalimat Tanya", "Kalimat Pujian", "Kalimat Berita"],
+                answer: 0,
+                discussion: "Pembahasan: Kalimat tersebut memberikan petunjuk pencegahan/larangan dalam menyimpan obat."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let selectedAnswers = new Array(quizQuestions.length).fill(null);
+
+        // Game State Variables
+        let gameTimerInterval = null;
+        let gameTimeRemaining = 45;
+        const correctGameOrder = ["1", "2", "3", "4"];
+
+        // Init App on Load
+        window.onload = function() {
+            loadProgress();
+            updateUI();
+        };
+
+        // Navigation Controller
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(sectionId);
+            if(targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Track progress
+                studentData.visitedPages.add(sectionId);
+                updateProgressBar();
+                saveProgress();
+            }
+
+            // Show header if logged in
+            if(studentData.name && sectionId !== 'halamanPembuka') {
+                document.getElementById('appHeader').classList.remove('hidden');
+            }
+        }
+
+        // Login Handler
+        function startLearning() {
+            const nameInput = document.getElementById('studentNameInput').value.trim();
+            if(!nameInput) {
+                alert('Silakan masukkan namamu terlebih dahulu!');
+                return;
+            }
+
+            studentData.name = nameInput;
+            document.getElementById('headerStudentName').innerText = nameInput;
+            document.getElementById('rekapStudentName').innerText = nameInput;
+            
+            saveProgress();
+            navigateTo('menuUtama');
+        }
+
+        // Progress Bar Updater
+        function updateProgressBar() {
+            const totalModules = 8; // Menu items excluding cover & result
+            const visitedCount = Math.min(studentData.visitedPages.size - 1, totalModules);
+            const percentage = Math.round((visitedCount / totalModules) * 100);
+
+            const progressBar = document.getElementById('overallProgressBar');
+            if(progressBar) progressBar.style.width = percentage + '%';
+
+            const rekapProgress = document.getElementById('rekapProgressPercentage');
+            if(rekapProgress) rekapProgress.innerText = percentage + '%';
+        }
+
+        // Materi Tab Controller
+        function showMateriTab(index) {
+            document.querySelectorAll('.materi-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.materi-tab-btn').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white');
+                b.classList.add('bg-slate-100', 'text-slate-600');
+            });
+
+            document.getElementById(`materiContent${index}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`materiTabBtn${index}`);
+            activeBtn.classList.remove('bg-slate-100', 'text-slate-600');
+            activeBtn.classList.add('bg-primary', 'text-white');
+
+            document.getElementById('materiTabIndicator').innerText = `Halaman ${index} dari 5`;
+
+            // Button Prev/Next states
+            const prevBtn = document.getElementById('prevMateriBtn');
+            const nextBtn = document.getElementById('nextMateriBtn');
+
+            prevBtn.disabled = (index === 1);
+            prevBtn.classList.toggle('opacity-50', index === 1);
+            prevBtn.classList.toggle('cursor-not-allowed', index === 1);
+
+            if(index === 5) {
+                nextBtn.innerHTML = 'Ke Video Pembelajaran <i class="fa-solid fa-arrow-right ml-1"></i>';
+                nextBtn.onclick = () => navigateTo('video');
+            } else {
+                nextBtn.innerHTML = 'Selanjutnya <i class="fa-solid fa-chevron-right ml-1"></i>';
+                nextBtn.onclick = () => showMateriTab(index + 1);
+            }
+        }
+
+        function prevMateriTab() {
+            // Find current active tab
+            for(let i=1; i<=5; i++) {
+                if(!document.getElementById(`materiContent${i}`).classList.contains('hidden')) {
+                    if(i > 1) showMateriTab(i - 1);
+                    break;
+                }
+            }
+        }
+
+        function nextMateriTab() {
+            for(let i=1; i<=5; i++) {
+                if(!document.getElementById(`materiContent${i}`).classList.contains('hidden')) {
+                    if(i < 5) showMateriTab(i + 1);
+                    break;
+                }
+            }
+        }
+
+        // Update YouTube Video Embed
+        function updateYoutubeVideo() {
+            const url = document.getElementById('youtubeUrlInput').value.trim();
+            if(!url) return;
+            let videoId = '';
+            
+            if(url.includes('v=')) {
+                videoId = url.split('v=')[1].split('&')[0];
+            } else if(url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1].split('?')[0];
+            }
+
+            if(videoId) {
+                document.getElementById('youtubeIframe').src = `https://www.youtube.com/embed/${videoId}`;
+                alert('Video berhasil diperbarui!');
+            } else {
+                alert('Tautan YouTube tidak valid!');
+            }
+        }
+
+        // Activity Controllers
+        function showActivity(actNum) {
+            [1, 2, 3].forEach(n => {
+                document.getElementById(`activityContent${n}`).classList.add('hidden');
+                document.getElementById(`actTab${n}`).classList.remove('border-primary', 'text-primary');
+                document.getElementById(`actTab${n}`).classList.add('border-transparent', 'text-slate-500');
+            });
+
+            document.getElementById(`activityContent${actNum}`).classList.remove('hidden');
+            document.getElementById(`actTab${actNum}`).classList.add('border-primary', 'text-primary');
+        }
+
+        function checkAct1(questionId, choice, btn) {
+            const fb = document.getElementById(`act1_fb${questionId}`);
+            fb.classList.remove('hidden', 'text-green-600', 'text-red-600');
+
+            if((questionId === 1 && choice === 'Alat dan Bahan') || (questionId === 2 && choice === 'Langkah-langkah')) {
+                fb.innerText = 'Jawaban Benar! 🎉';
+                fb.classList.add('text-green-600');
+            } else {
+                fb.innerText = 'Jawaban Kurang Tepat. Coba lagi!';
+                fb.classList.add('text-red-600');
+            }
+        }
+
+        function moveStep(btn, direction) {
+            const li = btn.closest('li');
+            if(direction === 'up' && li.previousElementSibling) {
+                li.parentNode.insertBefore(li, li.previousElementSibling);
+            } else if(direction === 'down' && li.nextElementSibling) {
+                li.parentNode.insertBefore(li.nextElementSibling, li);
+            }
+        }
+
+        function checkReorderActivity() {
+            const items = document.querySelectorAll('#reorderList li');
+            const currentOrder = Array.from(items).map(item => item.getAttribute('data-id'));
+            const expectedOrder = ["1", "2", "3", "4"];
+
+            const fb = document.getElementById('reorderFeedback');
+            fb.classList.remove('hidden', 'text-green-600', 'text-red-600');
+
+            if(JSON.stringify(currentOrder) === JSON.stringify(expectedOrder)) {
+                fb.innerText = 'Luar Biasa! Urutan langkah jus alpukat sudah tepat secara kronologis! 👍';
+                fb.classList.add('text-green-600');
+            } else {
+                fb.innerText = 'Urutan masih keliru. Perhatikan urutan membelah, mengupas, me-blender, dan menyajikan!';
+                fb.classList.add('text-red-600');
+            }
+        }
+
+        function checkAct3(qId, choice, btn) {
+            const fb = document.getElementById(`act3_fb${qId}`);
+            fb.classList.remove('hidden', 'text-green-600', 'text-red-600');
+
+            if((qId === 1 && choice === 'Konjungsi Temporal') || (qId === 2 && choice === 'Kata Kerja Imperatif')) {
+                fb.innerText = 'Tepat Sekali! 👌';
+                fb.classList.add('text-green-600');
+            } else {
+                fb.innerText = 'Masih kurang tepat, pelajari kembali kaidah kebahasaan!';
+                fb.classList.add('text-red-600');
+            }
+        }
+
+        // Quiz Engine
+        function renderQuizQuestion() {
+            const q = quizQuestions[currentQuizIndex];
+            document.getElementById('quizProgress').innerText = `Soal ${currentQuizIndex + 1}/${quizQuestions.length}`;
+            document.getElementById('quizQuestionText').innerText = q.q;
+
+            const container = document.getElementById('quizOptionsContainer');
+            container.innerHTML = '';
+
+            const discussionBox = document.getElementById('quizDiscussionBox');
+            discussionBox.classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = selectedAnswers[currentQuizIndex] === idx;
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3.5 rounded-xl border text-sm font-medium transition flex items-center justify-between ${
+                    isSelected ? 'bg-purple-100 border-purple-500 text-purple-900 font-bold' : 'bg-white border-slate-200 hover:bg-slate-50 text-slate-700'
+                }`;
+                btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}. ${opt}</span>`;
+                btn.onclick = () => selectQuizAnswer(idx);
+                container.appendChild(btn);
+            });
+
+            // Show discussion if already answered
+            if(selectedAnswers[currentQuizIndex] !== null) {
+                showQuizDiscussion();
+            }
+        }
+
+        function selectQuizAnswer(optionIndex) {
+            selectedAnswers[currentQuizIndex] = optionIndex;
+            renderQuizQuestion();
+        }
+
+        function showQuizDiscussion() {
+            const q = quizQuestions[currentQuizIndex];
+            const userAns = selectedAnswers[currentQuizIndex];
+            const discussionBox = document.getElementById('quizDiscussionBox');
+            
+            discussionBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-900', 'bg-rose-50', 'border-rose-200', 'text-rose-900');
+            
+            if(userAns === q.answer) {
+                discussionBox.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+            } else {
+                discussionBox.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+            }
+
+            discussionBox.innerHTML = `<strong>${q.discussion}</strong>`;
+        }
+
+        function nextQuizQuestion() {
+            if(selectedAnswers[currentQuizIndex] === null) {
+                alert('Pilih salah satu jawaban terlebih dahulu!');
+                return;
+            }
+
+            if(currentQuizIndex < quizQuestions.length - 1) {
+                currentQuizIndex++;
+                renderQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            let correctCount = 0;
+            selectedAnswers.forEach((ans, idx) => {
+                if(ans === quizQuestions[idx].answer) correctCount++;
+            });
+
+            // Score scaled to 0-100
+            const finalScore = Math.round((correctCount / quizQuestions.length) * 100);
+            studentData.quizScore = finalScore;
+
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('quizResultScreen').classList.remove('hidden');
+
+            document.getElementById('quizScoreDisplay').innerText = finalScore;
+            
+            const badge = document.getElementById('quizGradeBadge');
+            const msg = document.getElementById('quizFeedbackMessage');
+
+            badge.className = 'inline-block px-4 py-1.5 rounded-full text-xs font-bold text-white mb-2 ';
+
+            if(finalScore >= 90) {
+                badge.innerText = 'Kategori: Sangat Baik';
+                badge.classList.add('bg-emerald-500');
+                msg.innerText = 'Luar biasa! Kamu telah menguasai seluruh materi teks prosedur dengan sangat sempurna!';
+            } else if(finalScore >= 80) {
+                badge.innerText = 'Kategori: Baik';
+                badge.classList.add('bg-blue-500');
+                msg.innerText = 'Bagus sekali! Pemahamanmu tentang teks prosedur sudah sangat baik!';
+            } else if(finalScore >= 70) {
+                badge.innerText = 'Kategori: Cukup';
+                badge.classList.add('bg-amber-500');
+                msg.innerText = 'Cukup baik, tetapi disarankan membaca ulang beberapa bagian materi yang kurang tepat.';
+            } else {
+                badge.innerText = 'Kategori: Perlu Bimbingan';
+                badge.classList.add('bg-rose-500');
+                msg.innerText = 'Jangan berkecil hati. Ayo pelajari lagi materi pembelajaran dan coba kuisnya kembali!';
+            }
+
+            // Sync to summary table
+            document.getElementById('rekapQuizScore').innerText = finalScore;
+            document.getElementById('rekapQuizGrade').innerText = badge.innerText;
+
+            saveProgress();
+        }
+
+        function restartQuiz() {
+            currentQuizIndex = 0;
+            selectedAnswers.fill(null);
+            document.getElementById('quizResultScreen').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+            renderQuizQuestion();
+        }
+
+        // Game Logic: "Misi Susun Langkah"
+        const gameData = [
+            { id: "1", text: "Rebus air hingga mendidih lalu masukkan mi instan." },
+            { id: "2", text: "Siapkan bumbu mi goreng di atas piring sajian." },
+            { id: "3", text: "Tiriskan mi yang sudah matang lalu tuangkan ke piring." },
+            { id: "4", text: "Aduk mi bersama bumbu hingga tercampur merata." }
+        ];
+
+        function startGame() {
+            document.getElementById('gameStartArea').classList.add('hidden');
+            document.getElementById('gameFinishArea').classList.add('hidden');
+            document.getElementById('gamePlayArea').classList.remove('hidden');
+
+            // Shuffle Game Data steps
+            const shuffled = [...gameData].sort(() => Math.random() - 0.5);
+            const listContainer = document.getElementById('gameSortableList');
+            listContainer.innerHTML = '';
+
+            shuffled.forEach(item => {
+                const li = document.createElement('li');
+                li.setAttribute('data-id', item.id);
+                li.className = 'p-3 bg-white border border-pink-200 rounded-xl flex items-center justify-between shadow-sm text-xs font-semibold text-slate-700';
+                li.innerHTML = `
+                    <span>${item.text}</span>
+                    <div class="flex gap-1">
+                        <button onclick="moveStep(this, 'up')" class="px-2 py-1 bg-pink-100 text-pink-700 rounded"><i class="fa-solid fa-arrow-up"></i></button>
+                        <button onclick="moveStep(this, 'down')" class="px-2 py-1 bg-pink-100 text-pink-700 rounded"><i class="fa-solid fa-arrow-down"></i></button>
+                    </div>
+                `;
+                listContainer.appendChild(li);
+            });
+
+            // Start Countdown Timer
+            gameTimeRemaining = 45;
+            clearInterval(gameTimerInterval);
+            gameTimerInterval = setInterval(() => {
+                gameTimeRemaining--;
+                document.getElementById('gameTimer').innerText = `Sisa Waktu: ${gameTimeRemaining}d`;
+                if(gameTimeRemaining <= 0) {
+                    clearInterval(gameTimerInterval);
+                    checkGameAnswer();
+                }
+            }, 1000);
+        }
+
+        function checkGameAnswer() {
+            clearInterval(gameTimerInterval);
+            const items = document.querySelectorAll('#gameSortableList li');
+            const userOrder = Array.from(items).map(li => li.getAttribute('data-id'));
+
+            let points = 0;
+            if(JSON.stringify(userOrder) === JSON.stringify(correctGameOrder)) {
+                points = 100 + gameTimeRemaining * 2;
+                document.getElementById('gameMotivationalMsg').innerText = `Hebat! Kamu berhasil menyusun urutan prosedur dengan tepat dan cepat! Bonus waktu: +${gameTimeRemaining * 2} poin.`;
+            } else {
+                points = 40;
+                document.getElementById('gameMotivationalMsg').innerText = `Sayang sekali urutan langkah belum tepat. Cobalah bermain kembali!`;
+            }
+
+            studentData.gameScore = points;
+            document.getElementById('gameScore').innerText = points;
+            document.getElementById('rekapGameScore').innerText = points;
+
+            document.getElementById('gamePlayArea').classList.add('hidden');
+            document.getElementById('gameFinishArea').classList.remove('hidden');
+
+            saveProgress();
+        }
+
+        // Reflection Form Handler
+        function saveReflection(e) {
+            e.preventDefault();
+            studentData.reflections = {
+                q1: document.getElementById('refQ1').value,
+                q2: document.getElementById('refQ2').value,
+                q3: document.getElementById('refQ3').value,
+                q4: document.getElementById('refQ4').value
+            };
+
+            document.getElementById('reflectionSavedNotice').classList.remove('hidden');
+            updateReflectionSummaryUI();
+            saveProgress();
+        }
+
+        function updateReflectionSummaryUI() {
+            const container = document.getElementById('rekapReflectionSummary');
+            if(!studentData.reflections.q1) return;
+
+            container.innerHTML = `
+                <p><b>1. Pengetahuan Baru:</b> ${studentData.reflections.q1}</p>
+                <p><b>2. Materi Termudah:</b> ${studentData.reflections.q2}</p>
+                <p><b>3. Materi Masih Sulit:</b> ${studentData.reflections.q3}</p>
+                <p><b>4. Manfaat Kehidupan:</b> ${studentData.reflections.q4}</p>
+            `;
+        }
+
+        // LocalStorage Sync
+        function saveProgress() {
+            const payload = {
+                name: studentData.name,
+                quizScore: studentData.quizScore,
+                gameScore: studentData.gameScore,
+                visitedPages: Array.from(studentData.visitedPages),
+                reflections: studentData.reflections
+            };
+            localStorage.setItem('teksProsedurProgress', JSON.stringify(payload));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('teksProsedurProgress');
+            if(!saved) {
+                renderQuizQuestion();
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(saved);
+                studentData.name = parsed.name || '';
+                studentData.quizScore = parsed.quizScore;
+                studentData.gameScore = parsed.gameScore || 0;
+                studentData.visitedPages = new Set(parsed.visitedPages || ['halamanPembuka']);
+                studentData.reflections = parsed.reflections || {};
+
+                if(studentData.name) {
+                    document.getElementById('studentNameInput').value = studentData.name;
+                    document.getElementById('headerStudentName').innerText = studentData.name;
+                    document.getElementById('rekapStudentName').innerText = studentData.name;
+                }
+
+                if(studentData.quizScore !== null) {
+                    document.getElementById('rekapQuizScore').innerText = studentData.quizScore;
+                    document.getElementById('rekapQuizGrade').innerText = studentData.quizScore >= 70 ? 'Lulus' : 'Belum Lulus';
+                }
+
+                document.getElementById('rekapGameScore').innerText = studentData.gameScore;
+                document.getElementById('gameScore').innerText = studentData.gameScore;
+
+                if(studentData.reflections.q1) {
+                    document.getElementById('refQ1').value = studentData.reflections.q1 || '';
+                    document.getElementById('refQ2').value = studentData.reflections.q2 || '';
+                    document.getElementById('refQ3').value = studentData.reflections.q3 || '';
+                    document.getElementById('refQ4').value = studentData.reflections.q4 || '';
+                    updateReflectionSummaryUI();
+                }
+
+                renderQuizQuestion();
+            } catch(e) {
+                console.error("Gagal membaca progres tersimpan:", e);
+                renderQuizQuestion();
+            }
+        }
+
+        function resetDataProgress() {
+            if(confirm('Apakah Anda yakin ingin menghapus seluruh progres belajar dan nilai?')) {
+                localStorage.removeItem('teksProsedurProgress');
+                location.reload();
+            }
+        }
+
+        function updateUI() {
+            updateProgressBar();
+        }
+    </script>
+</body>
+</html>
